@@ -1,6 +1,6 @@
 # Pong — Java Swing y concurrencia
 
-ESTUDIANTE: Santiago Beltran Astorga
+ESTUDIANTE: Santiago Beltran Astorga  
 EXPEDIENTE: 225203551
 
 Proyecto didáctico que implementa una versión sencilla de **Pong para un jugador**. Una pelota se desplaza y rebota dentro de un tablero; el usuario mueve una raqueta horizontal para interceptarla. El ejemplo combina **Swing**, **Java 2D**, manejo del teclado y **dos hilos de ejecución**.
