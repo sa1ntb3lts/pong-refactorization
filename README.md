@@ -212,3 +212,21 @@ classDiagram
     }
     Main --> Board : crea e inserta
     Board --> Paddle : compone
+```
+
+## Pruebas de Funcionamiento (Actividad 7)
+
+| ID | Caso de prueba | Resultado esperado |
+| :--- | :--- | :--- |
+| CP-01 | Iniciar el juego | La pelota comienza a moverse correctamente. |
+| CP-02 | Pausar el juego | La pelota deja de moverse. |
+| CP-03 | Reanudar el juego | La pelota continúa su movimiento sin crear ciclos adicionales. |
+| CP-04 | Cerrar la aplicación | La ejecución termina de forma controlada. |
+| CP-05 | Colisión con pared izquierda | La pelota invierte su velocidad horizontal. |
+| CP-06 | Colisión con pared derecha | La pelota invierte su velocidad horizontal. |
+| CP-07 | Colisión con límite superior | La pelota invierte su velocidad vertical. |
+| CP-08 | Colisión con la raqueta | La pelota rebota correctamente. |
+| CP-09 | Movimiento de la raqueta | La raqueta permanece dentro del tablero. |
+| CP-10 | Pelota perdida | Se ejecuta la acción definida para esa condición (reinicio). |
+| CP-11 | Pausar y reanudar repetidamente | No se crean ciclos adicionales ni se altera la velocidad inesperadamente. |
+| CP-12 | Colisión cercana al borde de la raqueta | La detección funciona considerando las dimensiones de ambos objetos. |
