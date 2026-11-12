@@ -21,15 +21,14 @@ public class Board extends JComponent implements KeyListener {
     private Paddle paddle;
     private Timer gameTimer;
 
-    private int ballX;
-    private int ballY;
-    private int directionX = 1;
-    private int directionY = 1;
+    private double ballX;
+    private double ballY;
+    private double velocityX = 4.0;
+    private double velocityY = -4.0;
 
     public static final int MAX_X = 640;
     public static final int MAX_Y = 480;
-    public static final int DX = 20;
-    public static final int DY = 20;
+    public static final int BALL_SIZE = 20;
 
     private final Font theFont = new Font("SansSerif", Font.BOLD, 24);
 
@@ -37,12 +36,12 @@ public class Board extends JComponent implements KeyListener {
         setOpaque(true);
         setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
         
-        ballX = 320;
-        ballY = 240;
-        ball = new Ellipse2D.Double(ballX, ballY, 20, 20);
+        ballX = 310;
+        ballY = 230;
+        ball = new Ellipse2D.Double(ballX, ballY, BALL_SIZE, BALL_SIZE);
         paddle = new Paddle();
 
-        gameTimer = new Timer(150, new ActionListener() {
+        gameTimer = new Timer(20, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (state == GameState.RUNNING) {
@@ -55,28 +54,42 @@ public class Board extends JComponent implements KeyListener {
     }
 
     private void updateGameLogic() {
-        if (paddle.intersects(ball)) {
-            directionY *= -1;
-            ballX += DX * directionX;
-            ballY += DY * directionY;
-        } else {
-            if (ball.getMinY() < 0) {
-                directionY *= -1;
-            }
-            if (ball.getMinX() < 0) {
-                directionX *= -1;
-            }
-            if (ball.getMaxY() > MAX_Y) {
-                directionY *= -1;
-            }
-            if (ball.getMaxX() > MAX_X) {
-                directionX *= -1;
-            }
-            ballX += DX * directionX;
-            ballY += DY * directionY;
-        }
+        ballX += velocityX;
+        ballY += velocityY;
+
         ball.x = ballX;
         ball.y = ballY;
+
+        if (paddle.intersects(ball)) {
+            velocityY *= -1;
+            ballY = paddle.getPaddle().getMinY() - BALL_SIZE;
+            ball.y = ballY;
+        }
+
+        if (ballX <= 0) {
+            velocityX *= -1;
+            ballX = 0;
+        } else if (ballX + BALL_SIZE >= MAX_X) {
+            velocityX *= -1;
+            ballX = MAX_X - BALL_SIZE;
+        }
+
+        if (ballY <= 0) {
+            velocityY *= -1;
+            ballY = 0;
+        } else if (ballY + BALL_SIZE >= MAX_Y) {
+            resetBall();
+        }
+
+        ball.x = ballX;
+        ball.y = ballY;
+    }
+
+    private void resetBall() {
+        ballX = 310;
+        ballY = 230;
+        velocityX = 4.0;
+        velocityY = -4.0;
     }
 
     public void stopGame() {
@@ -112,7 +125,7 @@ public class Board extends JComponent implements KeyListener {
     @Override
     public Dimension getPreferredSize() {
         if (preferredSize == null) {
-            return new Dimension(640, 480);
+            return new Dimension(MAX_X, MAX_Y);
         } else {
             return super.getPreferredSize();
         }
