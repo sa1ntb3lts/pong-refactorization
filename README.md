@@ -230,3 +230,26 @@ classDiagram
 | CP-10 | Pelota perdida | Se ejecuta la acción definida para esa condición (reinicio). |
 | CP-11 | Pausar y reanudar repetidamente | No se crean ciclos adicionales ni se altera la velocidad inesperadamente. |
 | CP-12 | Colisión cercana al borde de la raqueta | La detección funciona considerando las dimensiones de ambos objetos. |
+
+## Preguntas de Reflexión (Sección 8)
+
+1. ¿Qué problemas puede ocasionar modificar el estado de un componente Swing desde un hilo diferente al EDT?
+Causa errores visuales, fallos de renderizado o bloqueos porque Swing no es seguro para hilos.
+
+2. ¿Por qué Thread.yield() no constituye una solución adecuada para implementar una pausa?
+Porque no bloquea el hilo, creando un ciclo de espera activa que consume toda la CPU.
+
+3. ¿Qué ventajas y limitaciones ofrece javax.swing.Timer frente a una implementación basada en Thread?
+Ventaja: actualiza de forma segura en el EDT sin espera activa. Limitación: no sirve para juegos muy exigentes si el EDT se satura.
+
+4. ¿Cómo influye la magnitud del desplazamiento de la pelota en la precisión de la detección de colisiones?
+Saltos muy grandes hacen que la pelota avance rápido y atraviese la raqueta sin registrar el impacto.
+
+5. ¿Qué beneficios aporta separar la lógica del juego de su representación gráfica?
+Facilita el mantenimiento, cumple con la responsabilidad única y permite hacer pruebas sin interfaz gráfica.
+
+6. ¿Cómo ayudan las pruebas automatizadas a reducir el riesgo de introducir defectos durante una refactorización?
+Sirven como red de seguridad para comprobar de inmediato que el código sigue funcionando bien tras los cambios.
+
+7. ¿Qué aspectos del diseño actual dificultarían agregar un segundo jugador, un marcador o diferentes niveles de dificultad?
+El acoplamiento de la lógica dentro del componente visual, la falta de clases escalables y el uso de valores fijos.
