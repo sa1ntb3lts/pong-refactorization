@@ -168,3 +168,13 @@ Teclado ──> Board.keyPressed(...) ──> mueve raqueta / pausa
 - Añadir puntuación, vidas y reinicio.
 - Calcular las colisiones usando las dimensiones reales del tablero y velocidades continuas.
 - Crear pruebas JUnit para movimiento, rebotes y límites de la raqueta.
+
+## Reporte de diagnóstico (Actividad 1)
+
+| Problema detectado | Ubicación | Consecuencias | Propuesta de solución |
+| :--- | :--- | :--- | :--- |
+| **Espera activa (*busy waiting*) con `Thread.yield()`** durante la pausa | `BallRunner.java` (líneas 43–46) | Consumo innecesario y elevado de CPU mientras el juego se encuentra pausado. | Reemplazar el ciclo de sondeo por mecanismos de sincronización basados en bloqueos o migrar la animación a un `javax.swing.Timer`. |
+| **Acceso concurrente no sincronizado** a objetos mutables compartidos (`ball`, `paddle`) | `BallRunner.java`, `Board.java`, `Paddle.java` | Condiciones de carrera, inconsistencias de estado y fallos de seguridad en los hilos. | Aislar las modificaciones de estado y garantizar que las actualizaciones de los componentes ocurran en el EDT. |
+| **Hilos huérfanos que nunca terminan** al cerrar la aplicación | `Board.java` y `BallRunner.java` | Los hilos de fondo siguen ejecutándose tras cerrar la ventana hasta que el proceso de Java es forzado a cerrarse. | Implementar un mecanismo de cierre en la ventana que invoque el método `stop()` para terminar los hilos limpiamente. |
+| **Violación del Principio de Responsabilidad Única (SRP)** en la clase `Board` | `Board.java` | Código altamente acoplado y difícil de mantener, donde un componente gráfico gestiona hilos, lógica y teclado simultáneamente. | Refactorizar la arquitectura separando claramente el modelo, la lógica del juego, el renderizado y el control de entrada. |
+| **Omisión de retardo (*sleep*)** en la ruta de colisión con la raqueta | `BallRunner.java` (líneas 49–57) | Al interceptar la raqueta se ejecuta un `continue` que omite el retardo, alterando y acelerando la velocidad de la pelota de forma errática. | Uniformar el bucle principal de actualización para que la física y la posición se calculen de forma constante antes del retardo fijo. |
