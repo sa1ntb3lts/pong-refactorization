@@ -178,3 +178,37 @@ Teclado ──> Board.keyPressed(...) ──> mueve raqueta / pausa
 | **Hilos huérfanos que nunca terminan** al cerrar la aplicación | `Board.java` y `BallRunner.java` | Los hilos de fondo siguen ejecutándose tras cerrar la ventana hasta que el proceso de Java es forzado a cerrarse. | Implementar un mecanismo de cierre en la ventana que invoque el método `stop()` para terminar los hilos limpiamente. |
 | **Violación del Principio de Responsabilidad Única (SRP)** en la clase `Board` | `Board.java` | Código altamente acoplado y difícil de mantener, donde un componente gráfico gestiona hilos, lógica y teclado simultáneamente. | Refactorizar la arquitectura separando claramente el modelo, la lógica del juego, el renderizado y el control de entrada. |
 | **Omisión de retardo (*sleep*)** en la ruta de colisión con la raqueta | `BallRunner.java` (líneas 49–57) | Al interceptar la raqueta se ejecuta un `continue` que omite el retardo, alterando y acelerando la velocidad de la pelota de forma errática. | Uniformar el bucle principal de actualización para que la física y la posición se calculen de forma constante antes del retardo fijo. |
+
+## Diagrama de Clases UML (Actividad 5)
+
+```mermaid
+classDiagram
+    direction TB
+    class Main {
+        +main(String[] args) void
+        -createAndShowGUI() void
+    }
+    class Board {
+        -state: GameState
+        -ball: Ellipse2D.Double
+        -paddle: Paddle
+        -gameTimer: Timer
+        -velocityX: double
+        -velocityY: double
+        +updateGameLogic() void
+        +paintComponent(Graphics graphicsContext) void
+        +keyPressed(KeyEvent e) void
+        +stopGame() void
+    }
+    class Paddle {
+        +WIDTH: int
+        +HEIGHT: int
+        -paddle: Rectangle2D.Double
+        -pos: int
+        +moveLeft() void
+        +moveRight() void
+        +getPaddle() Rectangle2D.Double
+        +intersects(RectangularShape shape) boolean
+    }
+    Main --> Board : crea e inserta
+    Board --> Paddle : compone
